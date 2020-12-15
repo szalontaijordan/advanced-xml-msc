@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="launchpads">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="launchpad" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+            <xs:attribute name="total" type="xs:integer" />
+        </xs:complexType>
+        <xs:key name="pad-id">
+            <xs:selector xpath="launchpad"/>
+            <xs:field xpath="@id"/>
+        </xs:key>
+    </xs:element>
+
+    <xs:element name="launchpad">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string" />
+                <xs:element name="coors">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:pattern value="-?[0-9]+\.?[0-9]*,-?[0-9]+\.?[0-9]*" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="attempts" type="xs:integer" />
+                <xs:element name="failures" type="xs:integer" />
+                <xs:element ref="launches" />
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:token" />
+            <xs:attribute ref="status" />
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="launches">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="launch" minOccurs="1" maxOccurs="unbounded" />                
+            </xs:sequence>
+        </xs:complexType>
+        <xs:key name="launch-id">
+            <xs:selector xpath="launch"/>
+            <xs:field xpath="@id"/>
+        </xs:key>
+    </xs:element>
+
+    <xs:element name="launch">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string" minOccurs="1" />
+                <xs:element name="date" type="xs:dateTime" minOccurs="1" />
+                <xs:element name="outcome" minOccurs="1">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:token">
+                            <xs:enumeration value="success"/>
+                            <xs:enumeration value="failure"/>
+                            <xs:enumeration value="TBD"/>
+                        </xs:restriction>                        
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="description" minOccurs="0" maxOccurs="1" />
+                <xs:element name="video" minOccurs="0">
+                    <xs:complexType>
+                        <xs:attribute ref="href" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:token" />
+            <xs:attribute name="upcoming" type="xs:boolean" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:attribute name="href">
+        <xs:simpleType>
+            <xs:restriction base="xs:anyURI">
+                <xs:pattern value="https://youtube.com/watch\?v=.+"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+    
+    <xs:attribute name="status">
+        <xs:simpleType>
+            <xs:restriction base="xs:token">
+                <xs:enumeration value="active"/>
+                <xs:enumeration value="retired"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+</xs:schema>

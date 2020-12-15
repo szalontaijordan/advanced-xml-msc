@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="launches">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="launch" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+        <xs:key name="launch-id">
+            <xs:selector xpath="launch"></xs:selector>
+            <xs:field xpath="@id"></xs:field>
+        </xs:key>
+    </xs:element>
+    
+    <xs:element name="launch">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string" minOccurs="1" />
+                <xs:element name="date" type="xs:dateTime" minOccurs="1" />
+                <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1" />
+                <xs:element name="failures">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="failure" />
+                        </xs:sequence>
+                        <xs:attribute name="total" type="xs:integer" />
+                        <xs:attribute name="had-crew" type="xs:boolean" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element ref="links" />
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:token"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="failure">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="at" type="xs:integer" />
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="links">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="video" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:attribute name="href">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:anyURI">
+                                    <xs:pattern value="https://youtube.com/watch\?v=.+"/>
+                                </xs:restriction>                                
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="article" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:attribute name="href" type="xs:anyURI" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="json" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:attribute name="href">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:anyURI">
+                                    <xs:pattern value="https://api.spacexdata.com/v4/launches/.+"/>
+                                </xs:restriction>                                
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

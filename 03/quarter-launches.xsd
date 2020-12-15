@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="years">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="year" minOccurs="1" maxOccurs="unbounded" />
+            </xs:sequence>
+            <xs:attribute ref="launches" />
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="year">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Q1" type="quarter-type" minOccurs="1" maxOccurs="1" />
+                <xs:element name="Q2" type="quarter-type" minOccurs="1" maxOccurs="1" />
+                <xs:element name="Q3" type="quarter-type" minOccurs="1" maxOccurs="1" />
+                <xs:element name="Q4" type="quarter-type" minOccurs="1" maxOccurs="1" />
+            </xs:sequence>
+            <xs:attribute ref="launches" />
+            <xs:attribute name="value" type="xs:integer" />
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="quarter-type">
+        <xs:sequence>
+            <xs:element ref="launch" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute ref="launches" />
+    </xs:complexType>
+    
+    <xs:element name="launch">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string" minOccurs="1" />
+                <xs:element name="date" type="xs:dateTime" minOccurs="1" />
+                <xs:element name="description" minOccurs="0" maxOccurs="1" />
+                <xs:element name="video" minOccurs="0">
+                    <xs:complexType>
+                        <xs:attribute ref="href" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:token" />
+            <xs:attribute name="upcoming" type="xs:boolean" />            
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:attribute name="href">
+        <xs:simpleType>
+            <xs:restriction base="xs:anyURI">
+                <xs:pattern value="https://youtube.com/watch\?v=.+"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+    
+    <xs:attribute name="launches">
+        <xs:simpleType>
+            <xs:restriction base="xs:integer">
+                <xs:minInclusive value="0" />
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+</xs:schema>
